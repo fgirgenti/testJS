@@ -1,0 +1,53 @@
+<html>
+<head>
+    <title>Test JS</title>
+</head>
+<body>
+    <select id="cat-selector"></select>
+    <div></div>
+</body>
+</html>
+
+<script>
+    
+    function getTags() {
+        fetch('https://cataas.com/api/tags')
+        .then(response => response.json())
+        .then((response) => {
+            const tags = [4,5,6,7,8,9,14,15,16,17,18,19].map(x => response[x]);
+            tags.forEach(tag => createMenu(tag));
+        })
+    }
+
+    function createMenu(tag) {
+        const catSelector = document.querySelector('#cat-selector');
+        const newOption = document.createElement('option');
+        newOption.text = tag;
+        catSelector.append(newOption);
+    }
+    
+    function getImage() {
+        fetch(`https://cataas.com/cat/${event.target.value}?json=true`)
+        .then(response => response.json())
+        .then((response) => {
+            createImage(response.url, response.tags);
+        })
+    }
+
+    function createImage(url, tags) {
+        const figure = document.createElement('figure');
+        const newImg = document.createElement('img');
+        const newCaption = document.createElement('figcaption');
+        newImg.setAttribute('src',`https://cataas.com${url}`);
+        newCaption.innerText = tags.join("- ")
+        document.querySelector('div').append(figure);
+        figure.prepend(newImg);
+        figure.append(newCaption);
+    }
+    
+    const catSelector = document.querySelector('#cat-selector');
+    catSelector.addEventListener('change', getImage);
+    
+    getTags();
+
+</script>
